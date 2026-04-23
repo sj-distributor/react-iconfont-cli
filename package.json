@@ -1,6 +1,6 @@
 {
   "name": "@sj-distributor/react-iconfont-cli",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "index.js",
   "keywords": [
     "iconfont",
@@ -15,8 +15,8 @@
   "license": "MIT",
   "bin": {
     "sj-iconfont": "./commands/help.js",
-    "sj-iconfont-init": "./commands/createJson.js",
-    "sj-iconfont-h5": "./commands/createIcon.js"
+    "sj-iconfont-h5": "./commands/createIcon.js",
+    "sj-iconfont-init": "./commands/createJson.js"
   },
   "peerDependencies": {
     "react": "*"
