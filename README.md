@@ -1,44 +1,40 @@
-> 这个存储库是 原始存储库名称 [react-iconfont-cli](https://github.com/iconfont-cli/react-iconfont-cli) 的一个分支，它已经有一段时间没有被积极维护。我们已经决定接管这个项目的维护，以保持它的活力和改善它的功能。我们致力于引入新特性、修复现有问题，并与社区紧密合作，确保这个库能够满足开发者的需求。
+# react-iconfont-cli
 
-## react-iconfont-cli
+> 本仓库是 [react-iconfont-cli](https://github.com/iconfont-cli/react-iconfont-cli) 的维护分支。原仓库长期缺少维护后，我们接管并持续迭代，欢迎通过 Issue 和 PR 提供反馈。
 
-用纯 JS 把 iconfont.cn 的图标转换成 React 组件，不依赖字体，支持多色彩
+将 iconfont.cn 的图标资源转换为 React 组件，无字体依赖，支持多色图标与自动化生成。
 
-![](https://github.com/Simoon-F/react-iconfont-cli/blob/master/images/icons.png?raw=true)
+![icons](./images/icons.png)
 
 ## 特性
 
-1、纯组件，不依赖字体，体积小
-<br />
-2、支持渲染多色彩图标，支持自定义颜色
-<br />
-3、自动化生成图标组件，支持 es6 和 typescript 两种文件格式
+- 纯组件渲染，不依赖字体文件，体积更小
+- 支持单色与多色图标，并可通过参数自定义颜色
+- 自动生成图标组件，支持 JavaScript 与 TypeScript 输出
 
-## Step 1
+## 快速开始
 
-安装插件
+### 1. 安装
 
 ```bash
 # Yarn
 yarn add @sj-distributor/react-iconfont-cli --dev
 
-# Npm
-npm install @sj-distributor/react-iconfont-cli --save-dev
+# pnpm
+pnpm install @sj-distributor/react-iconfont-cli --save-dev
 ```
 
-# Step 2
-
-生成配置文件
+### 2. 初始化配置
 
 ```bash
 npx sj-iconfont-init
 ```
 
-此时项目根目录会生成一个`iconfont.json`的文件，内容如下：
+执行后会在项目根目录生成 `iconfont.json`：
 
 ```json
 {
-  "symbol_url": "请参考README.md，复制官网提供的JS链接",
+  "symbol_url": "请参考 README.md，复制官网提供的 JS 链接",
   "use_typescript": false,
   "save_dir": "./src/components/iconfont",
   "trim_icon_prefix": "icon",
@@ -48,61 +44,40 @@ npx sj-iconfont-init
 }
 ```
 
-### 配置参数说明：
-
-### symbol_url
-
-请直接复制[iconfont](http://iconfont.cn)官网提供的项目链接。请务必看清是`.js`后缀而不是.css 后缀。如果你现在还没有创建 iconfont 的仓库，那么可以填入这个链接去测试：`http://at.alicdn.com/t/font_1373348_ghk94ooopqr.js`
-
-<br />
-
-![](https://github.com/Simoon-F/react-iconfont-cli/blob/master/images/symbol-url.png?raw=true)
-
-### use_typescript
-
-如果您的项目使用 Typescript 编写，请设置为 true。这个选项将决定生成的图标组件是`.tsx`还是`.js`后缀。
-
-当该值为 false 时，我们会为您的图标生成`.js`和`.d.ts`两个文件，以便您能享受到最好的开发体验。
-
-### save_dir
-
-根据 iconfont 图标生成的组件存放的位置。每次生成组件之前，该文件夹都会被清空。
-
-### trim_icon_prefix
-
-如果你的图标有通用的前缀，而你在使用的时候又不想重复去写，那么可以通过这种配置这个选项把前缀统一去掉。
-
-注意，这个选项只针对 `<Icon />` 组件有效
-
-### unit
-
-图标的单位，默认是网页常用单位`px`即像素，也推荐您在手机网页中使用自适应的`rem`单位。
-
-### default_icon_size
-
-我们将为每个生成的图标组件加入默认的字体大小，当然，你也可以通过传入 props 的方式改变这个 size 值。
-
-### can_import_react
-
-有些项目配置需要引入 `React` 才可以正常 `run` 或 `build` 项目，这里可通过这个配置控制是否导入 `React`。
-
-# Step 3
-
-开始生成 React 标准组件
+### 3. 生成图标组件
 
 ```bash
 npx sj-iconfont-h5
 ```
 
-生成后查看您设置的保存目录中是否含有所有的图标，你可以参考[snapshots 目录](https://github.com/iconfont-cli/react-iconfont-cli/tree/master/snapshots)的快照文件，以区分不同模式下的图标结构。
+生成完成后请检查 `save_dir` 对应目录。输出结构可参考 [snapshots](./snapshots)。
 
-# 使用
+## 配置项说明
 
-现在我们提供了两种引入方式供您选择：
+| 字段                | 类型      | 默认值                      | 说明                                                                       |
+| ------------------- | --------- | --------------------------- | -------------------------------------------------------------------------- |
+| `symbol_url`        | `string`  | -                           | iconfont 官网提供的 JS 地址，必须是 `.js` 结尾                             |
+| `use_typescript`    | `boolean` | `false`                     | 是否生成 TypeScript 组件。`true` 生成 `.tsx`，`false` 生成 `.js` + `.d.ts` |
+| `save_dir`          | `string`  | `./src/components/iconfont` | 图标组件输出目录。每次生成前会清空该目录                                   |
+| `trim_icon_prefix`  | `string`  | `icon`                      | 去除图标名前缀，仅对汇总 `Icon` 组件的 `name` 参数生效                     |
+| `unit`              | `string`  | `px`                        | 图标尺寸单位，常见值如 `px`、`rem`                                         |
+| `default_icon_size` | `number`  | `18`                        | 每个图标组件的默认尺寸                                                     |
+| `can_import_react`  | `boolean` | `true`                      | 是否在生成文件中显式导入 `React`                                           |
 
-1、使用汇总`Icon`组件：
+`symbol_url` 获取示例：
 
-```typescript jsx
+- 请在 iconfont 项目中复制官方生成的 JS 链接，而不是 CSS 链接。
+- 你也可以先用这个地址进行测试：`http://at.alicdn.com/t/font_1373348_ghk94ooopqr.js`
+
+![symbol-url](./images/symbol-url.png)
+
+## 使用方式
+
+支持两种引入方式。
+
+### 1. 使用汇总 Icon 组件
+
+```tsx
 import React from "react";
 import IconFont from "../src/iconfont";
 
@@ -116,9 +91,11 @@ export const App = () => {
 };
 ```
 
-2、使用单个图标。这样可以避免没用到的图标也打包进 App：
+### 2. 使用单个图标组件
 
-```typescript jsx
+按需引入可避免未使用图标被打包进应用。
+
+```tsx
 import React from "react";
 import IconAlipay from "../src/iconfont/IconAlipay";
 import IconWechat from "../src/iconfont/IconWechat";
@@ -133,70 +110,75 @@ export const App = () => {
 };
 ```
 
+## 图标样式
+
 ### 图标尺寸
 
-根据配置`default_icon_size`，每个图标都会有一个默认的尺寸，你可以随时覆盖。
+每个图标默认尺寸来自 `default_icon_size`，可通过 `size` 覆盖：
 
-```typescript jsx
+```tsx
 <IconFont name="alipay" size={20} />
 ```
 
-![](https://github.com/Simoon-F/react-iconfont-cli/blob/master/images/default-color-icon.png?raw=true)
+![default-color-icon](./images/default-color-icon.png)
 
 ### 图标单色
 
-单色图标，如果不指定颜色值，图标将渲染原本的颜色。如果你想设置为其他的颜色，那么设置一个你想要的颜色即可。
+传入字符串颜色时，图标会按单色渲染：
 
-**注意：如果你在 props 传入的 color 是字符串而不是数组，那么即使原本是多色彩的图标，也会变成单色图标。**
-
-```typescript jsx
+```tsx
 <IconFont name="alipay" color="green" />
 ```
 
-![](https://github.com/Simoon-F/react-iconfont-cli/blob/master/images/one-color-icon.png?raw=true)
+![one-color-icon](./images/one-color-icon.png)
 
-### 图标多色彩
+### 图标多色
 
-多色彩的图标，如果不指定颜色值，图标将渲染原本的多色彩。如果你想设置为其他的颜色，那么设置一组你想要的颜色即可
+传入颜色数组时，按路径顺序替换图标颜色：
 
-```typescript jsx
+```tsx
 <IconFont name="alipay" color={["green", "orange"]} />
 ```
 
-颜色组的数量以及排序，需要根据当前图标的信息来确定。您需要进入图标组件中查看并得出结论。
+颜色数量与顺序需参考具体图标组件中的路径定义。
 
-![](https://github.com/Simoon-F/react-iconfont-cli/blob/master/images/multi-color-icon.png?raw=true)
+![multi-color-icon](./images/multi-color-icon.png)
 
 ### 与文字并排
 
-图标是块状的容器，如果您想与文字并排混合，请使用`flex`布局以保证文字和图标能对齐
+图标容器默认是块级效果，建议使用 `flex` 对齐文本：
 
-```jsx harmony
+```jsx
 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
   <span>Hello</span>
   <IconFont name="alipay" />
 </div>
 ```
 
-# 更新图标
+## 更新图标
 
-当您在 iconfont.cn 中的图标有变更时，只需更改配置`symbol_url`，然后再次执行`Step 3`即可生成最新的图标组件
+当 iconfont 项目图标有变更时，更新 `iconfont.json` 中的 `symbol_url` 后重新生成：
 
 ```bash
-# 修改 symbol_url 配置后执行：
 npx sj-iconfont-h5
 ```
 
-# 扩展
+## 常见问题
 
-| 平台         | 库                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------- |
-| 小程序       | [mini-program-iconfont-cli](https://github.com/iconfont-cli/mini-program-iconfont-cli) |
-| Taro         | [taro-iconfont-cli](https://github.com/iconfont-cli/taro-iconfont-cli)                 |
-| React Native | [react-native-iconfont-cli](https://github.com/iconfont-cli/react-native-iconfont-cli) |
-| Flutter      | [flutter-iconfont-cli](https://github.com/iconfont-cli/flutter-iconfont-cli)           |
-| Remax        | [remax-iconfont-cli](https://github.com/iconfont-cli/remax-iconfont-cli)               |
+### 1. 提示找不到 iconfont.json
 
----
+请先在项目根目录执行：
 
-欢迎使用，并给我一些反馈和建议，让这个库做的更好
+```bash
+npx sj-iconfont-init
+```
+
+### 2. 多色图标变成单色
+
+如果 `color` 传入的是字符串而不是数组，多色图标会按单色模式渲染。
+
+### 3. 图标没有更新
+
+请确认 `symbol_url` 已替换为最新链接，并再次执行生成命令。
+
+欢迎使用，期待你的反馈与建议。
