@@ -20,7 +20,7 @@ import {
 } from "./replace";
 import { whitespace } from "./whitespace";
 import { copyTemplate } from "./copyTemplate";
-import type { XmlData } from '../commands/types';
+import type { XmlData } from "../commands/types";
 
 const ATTRIBUTE_FILL_MAP = ["path"];
 
@@ -37,7 +37,7 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
   copyTemplate(
     `helper${jsExtension}`,
-    path.join(saveDir, `helper${jsExtension}`)
+    path.join(saveDir, `helper${jsExtension}`),
   );
   if (!config.use_typescript) {
     copyTemplate("helper.d.ts", path.join(saveDir, "helper.d.ts"));
@@ -49,7 +49,7 @@ export const generateComponent = (data: XmlData, config: Config) => {
     const iconIdAfterTrim = config.trim_icon_prefix
       ? iconId.replace(
           new RegExp(`^${config.trim_icon_prefix}(.+?)$`),
-          (_, value) => value.replace(/^[-_.=+#@!~*]+(.+?)$/, "$1")
+          (_, value) => value.replace(/^[-_.=+#@!~*]+(.+?)$/, "$1"),
         )
       : iconId;
     const componentName = upperFirst(camelCase(iconId));
@@ -74,7 +74,7 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
     fs.writeFileSync(
       path.join(saveDir, componentName + jsxExtension),
-      singleFile
+      singleFile,
     );
 
     if (!config.use_typescript) {
@@ -82,16 +82,16 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
       typeDefinitionFile = replaceComponentName(
         typeDefinitionFile,
-        componentName
+        componentName,
       );
       fs.writeFileSync(
         path.join(saveDir, componentName + ".d.ts"),
-        typeDefinitionFile
+        typeDefinitionFile,
       );
     }
 
     console.log(
-      `${colors.green("√")} Generated icon "${colors.yellow(iconId)}"`
+      `${colors.green("√")} Generated icon "${colors.yellow(iconId)}"`,
     );
   });
 
@@ -118,18 +118,22 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
   console.log(
     `\n${colors.green("√")} All icons have putted into dir: ${colors.green(
-      config.save_dir
-    )}\n`
+      config.save_dir,
+    )}\n`,
   );
 };
 
 const generateCase = (
   data: XmlData["svg"]["symbol"][number],
-  baseIdent: number
+  baseIdent: number,
 ) => {
   let template = `\n${whitespace(baseIdent)}<svg viewBox="${
     data.$.viewBox
   }" width={size} height={size} style={style} {...rest}>\n`;
+
+  // Determine the primary fill color (first path's fill)
+  // to distinguish primary paths from detail paths at runtime.
+  const primaryFill = getPrimaryFill(data);
 
   for (const domName of Object.keys(data)) {
     if (domName === "$") {
@@ -150,14 +154,16 @@ const generateCase = (
       template += `${whitespace(baseIdent + 2)}<${domName}${addAttribute(
         domName,
         data[domName],
-        counter
+        counter,
+        primaryFill,
       )}\n${whitespace(baseIdent + 2)}/>\n`;
     } else if (Array.isArray(data[domName])) {
       data[domName].forEach((sub) => {
         template += `${whitespace(baseIdent + 2)}<${domName}${addAttribute(
           domName,
           sub,
-          counter
+          counter,
+          primaryFill,
         )}\n${whitespace(baseIdent + 2)}/>\n`;
       });
     }
@@ -168,10 +174,29 @@ const generateCase = (
   return template;
 };
 
+const getPrimaryFill = (data: XmlData["svg"]["symbol"][number]): string => {
+  for (const domName of Object.keys(data)) {
+    if (domName === "$" || !ATTRIBUTE_FILL_MAP.includes(domName)) {
+      continue;
+    }
+
+    const firstItem = Array.isArray(data[domName])
+      ? data[domName][0]
+      : data[domName];
+
+    if (firstItem?.$?.fill) {
+      return firstItem.$.fill;
+    }
+  }
+
+  return "#333333";
+};
+
 const addAttribute = (
   domName: string,
   sub: XmlData["svg"]["symbol"][number]["path"][number],
-  counter: { colorIndex: number; baseIdent: number }
+  counter: { colorIndex: number; baseIdent: number },
+  primaryFill: string,
 ) => {
   let template = "";
 
@@ -185,14 +210,14 @@ const addAttribute = (
     for (const attributeName of Object.keys(sub.$)) {
       if (attributeName === "fill") {
         template += `\n${whitespace(counter.baseIdent + 4)}${camelCase(
-          attributeName
+          attributeName,
         )}={getIconColor(color, ${counter.colorIndex}, '${
           sub.$[attributeName]
-        }')}`;
+        }', '${primaryFill}')}`;
         counter.colorIndex += 1;
       } else {
         template += `\n${whitespace(counter.baseIdent + 4)}${camelCase(
-          attributeName
+          attributeName,
         )}="${sub.$[attributeName]}"`;
       }
     }
