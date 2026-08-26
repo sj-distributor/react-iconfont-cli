@@ -2,6 +2,10 @@ export const replaceSize = (content: string, size: number) => {
   return content.replace(/#size#/g, String(size));
 };
 
+export const replaceAriaLabel = (content: string, label: string) => {
+  return content.replace(/#ariaLabel#/g, JSON.stringify(label));
+};
+
 export const replaceCases = (content: string, cases: string) => {
   return content.replace(/#cases#/g, cases);
 };

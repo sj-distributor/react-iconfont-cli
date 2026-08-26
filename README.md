@@ -155,6 +155,32 @@ export const App = () => {
 </div>
 ```
 
+## 无障碍支持（WCAG）
+
+无障碍属性添加在最终生成的单图标 SVG 上。重新运行生成命令后，现有调用无需修改即可获得默认的可访问名称。
+
+将生成类似下面的 SVG：
+
+```html
+<svg role="img" aria-label="alipay" focusable="false">...</svg>
+```
+
+默认的 `aria-label` 是本包提供的兜底值：它根据去除前缀后的图标名生成，并将连字符、下划线和驼峰命名转换为空格。例如 `arrow-left` 会生成 `aria-label="arrow left"`。
+
+本包无法判断图标在具体页面中的含义和语言。调用方应根据实际语境覆盖默认标签：
+
+```tsx
+<IconFont name="alipay" aria-label="支付宝" />
+```
+
+如果图标只是装饰，或者所在按钮、链接已经有可访问名称，可以显式隐藏图标，避免读屏软件重复朗读：
+
+```tsx
+<button type="button" aria-label="关闭">
+  <IconFont name="close" aria-hidden="true" />
+</button>
+```
+
 ## 更新图标
 
 当 iconfont 项目图标有变更时，更新 `iconfont.json` 中的 `symbol_url` 后重新生成：

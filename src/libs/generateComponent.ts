@@ -7,6 +7,7 @@ import { camelCase, upperFirst } from "lodash";
 import { Config } from "./getConfig";
 import { getTemplate } from "./getTemplate";
 import {
+  replaceAriaLabel,
   replaceReactName,
   replaceCases,
   replaceComponentName,
@@ -63,6 +64,10 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
     singleFile = getTemplate("SingleIcon" + jsxExtension);
     singleFile = replaceSize(singleFile, config.default_icon_size);
+    singleFile = replaceAriaLabel(
+      singleFile,
+      getAccessibleLabel(iconIdAfterTrim),
+    );
 
     if (jsxExtension === ".tsx") {
       singleFile = replaceReactName(singleFile, config.can_import_react);
@@ -129,7 +134,7 @@ const generateCase = (
 ) => {
   let template = `\n${whitespace(baseIdent)}<svg viewBox="${
     data.$.viewBox
-  }" width={size} height={size} style={style} {...rest}>\n`;
+  }" width={size} height={size} style={style} role={role} aria-label={accessibilityLabel} focusable="false" {...rest}>\n`;
 
   // Determine the primary fill color (first path's fill)
   // to distinguish primary paths from detail paths at runtime.
@@ -172,6 +177,16 @@ const generateCase = (
   template += `${whitespace(baseIdent)}</svg>\n`;
 
   return template;
+};
+
+const getAccessibleLabel = (iconName: string): string => {
+  const label = iconName
+    .replace(/([a-z\d])([A-Z])/g, "$1 $2")
+    .replace(/[-_.=+#@!~*]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return label || iconName;
 };
 
 const getPrimaryFill = (data: XmlData["svg"]["symbol"][number]): string => {
