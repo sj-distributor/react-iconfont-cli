@@ -177,7 +177,11 @@ const handleIconClick = () => {
 />;
 ```
 
-`buttonProps` 用于设置外层按钮的属性；`className`、`style` 等普通图标属性仍应用到内部 SVG。按钮默认为 `type="button"`，并进行最小样式重置：背景透明、无边框、无内边距，同时移除浏览器原生按钮外观。除此之外不附带布局、尺寸或颜色样式，调用方可以使用普通 CSS、CSS Modules 或 Tailwind CSS 自行控制。需要覆盖重置项时，可通过 `buttonProps.style` 设置。原生按钮已经支持 Enter/Space 键盘操作，因此不需要额外添加 `onKeyDown`。
+`buttonProps` 用于设置外层按钮的属性；`className`、`style` 等普通图标属性仍应用到内部 SVG。按钮默认为 `type="button"`，并进行最小样式重置：背景透明、无边框、无内边距，同时移除浏览器原生按钮外观。
+
+除此之外不附带布局、尺寸或颜色样式，调用方可以使用普通 CSS、CSS Modules 或 Tailwind CSS 自行控制。需要覆盖重置项时，可通过 `buttonProps.style` 设置。
+
+原生按钮已经支持 Enter/Space 键盘操作，因此不需要额外添加 `onKeyDown`。
 
 交互模式下，顶层的 `aria-*`、`role` 和 `tabIndex` 会自动应用到外层按钮，不会留在已隐藏的 SVG 上。除 `aria-label` 和 `onClick` 外，也可以通过 `buttonProps` 设置按钮属性；同名属性以 `buttonProps` 为准。
 
