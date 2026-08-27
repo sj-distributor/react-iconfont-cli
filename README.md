@@ -155,6 +155,42 @@ export const App = () => {
 </div>
 ```
 
+### 点击交互
+
+不要直接把 SVG 图标作为交互控件。SVG 本身不是原生按钮，直接使用时还需要自行实现焦点、键盘操作、控件角色和可访问名称。
+
+汇总 `IconFont` 组件检测到 `onClick` 后，会自动渲染一个原生 `button`，并将内部 SVG 标记为装饰元素；没有 `onClick` 时仍然只渲染 SVG：
+
+```tsx
+const handleIconClick = () => {
+  console.log("icon clicked");
+};
+
+<IconFont
+  name="alipay"
+  aria-label="打开支付宝"
+  onClick={handleIconClick}
+  buttonProps={{
+    className: "icon-button",
+    disabled: false,
+  }}
+/>;
+```
+
+`buttonProps` 用于设置外层按钮的属性；`className`、`style` 等普通图标属性仍应用到内部 SVG。按钮仅默认设置 `type="button"`，不附带布局、尺寸、颜色或重置样式，调用方可以使用普通 CSS、CSS Modules 或 Tailwind CSS 自行控制。原生按钮已经支持 Enter/Space 键盘操作，因此不需要额外添加 `onKeyDown`。
+
+交互模式下，顶层的 `aria-*`、`role` 和 `tabIndex` 会自动应用到外层按钮，不会留在已隐藏的 SVG 上。除 `aria-label` 和 `onClick` 外，也可以通过 `buttonProps` 设置按钮属性；同名属性以 `buttonProps` 为准。
+
+调用方自定义按钮样式时，应保留清晰的键盘焦点状态，并根据适用的 WCAG 等级确保足够的点击区域和间距。
+
+按需引入的单图标组件始终只渲染 SVG。如需交互，请由调用方显式包裹按钮：
+
+```tsx
+<button type="button" onClick={handleIconClick} aria-label="打开支付宝">
+  <IconAlipay aria-hidden="true" />
+</button>
+```
+
 ## 无障碍支持（WCAG）
 
 无障碍属性添加在最终生成的单图标 SVG 上。重新运行生成命令后，现有调用无需修改即可获得默认的可访问名称。

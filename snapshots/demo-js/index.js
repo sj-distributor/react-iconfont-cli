@@ -8,18 +8,83 @@ export { default as IconAlipay } from './IconAlipay';
 export { default as IconUser } from './IconUser';
 export { default as IconSetup } from './IconSetup';
 
-const IconFont = ({ name, ...rest }) => {
+const splitInteractiveProps = (props) => {
+  const buttonA11yProps = {};
+  const iconProps = {};
+
+  Object.keys(props).forEach((propName) => {
+    if (
+      propName.indexOf('aria-') === 0 ||
+      propName === 'role' ||
+      propName === 'tabIndex'
+    ) {
+      buttonA11yProps[propName] = props[propName];
+    } else {
+      iconProps[propName] = props[propName];
+    }
+  });
+
+  return { buttonA11yProps, iconProps };
+};
+
+const getAccessibleLabel = (iconName) => {
+  const label = iconName
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    .replace(/[-_.=+#@!~*]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return label || iconName;
+};
+
+const IconFont = ({
+  name,
+  onClick,
+  buttonProps = {},
+  'aria-label': ariaLabel,
+  ...rest
+}) => {
+  const interactiveProps = splitInteractiveProps(rest);
+  const iconProps = onClick
+    ? { ...interactiveProps.iconProps, 'aria-hidden': true }
+    : { ...rest, 'aria-label': ariaLabel };
+  let icon = null;
+
   switch (name) {
     case 'alipay':
-      return <IconAlipay {...rest} />;
+      icon = <IconAlipay {...iconProps} />;
+      break;
     case 'user':
-      return <IconUser {...rest} />;
+      icon = <IconUser {...iconProps} />;
+      break;
     case 'setup':
-      return <IconSetup {...rest} />;
+      icon = <IconSetup {...iconProps} />;
+      break;
 
   }
 
-  return null;
+  if (!icon || !onClick) {
+    return icon;
+  }
+
+  const { type = 'button', ...restButtonProps } = buttonProps;
+  delete restButtonProps.dangerouslySetInnerHTML;
+  const accessibilityLabel =
+    typeof ariaLabel === 'string' && ariaLabel.trim()
+      ? ariaLabel.trim()
+      : getAccessibleLabel(name);
+
+  return (
+    <button
+      {...interactiveProps.buttonA11yProps}
+      {...restButtonProps}
+      type={type}
+      aria-label={accessibilityLabel}
+      onClick={onClick}
+    >
+      {icon}
+    </button>
+  );
 };
 
 export default IconFont;

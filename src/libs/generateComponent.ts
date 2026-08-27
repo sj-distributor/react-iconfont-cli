@@ -60,7 +60,8 @@ export const generateComponent = (data: XmlData, config: Config) => {
     cases += `${whitespace(4)}case '${iconIdAfterTrim}':\n`;
 
     imports.push(componentName);
-    cases += `${whitespace(6)}return <${componentName} {...rest} />;\n`;
+    cases += `${whitespace(6)}icon = <${componentName} {...iconProps} />;\n`;
+    cases += `${whitespace(6)}break;\n`;
 
     singleFile = getTemplate("SingleIcon" + jsxExtension);
     singleFile = replaceSize(singleFile, config.default_icon_size);
