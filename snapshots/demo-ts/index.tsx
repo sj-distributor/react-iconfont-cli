@@ -28,6 +28,7 @@ const DEFAULT_BUTTON_STYLE: CSSProperties = {
   appearance: 'none',
   background: 'transparent',
   border: 0,
+  cursor: 'pointer',
   padding: 0,
 };
 

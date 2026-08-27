@@ -12,6 +12,7 @@ const DEFAULT_BUTTON_STYLE = {
   appearance: 'none',
   background: 'transparent',
   border: 0,
+  cursor: 'pointer',
   padding: 0,
 };
 
