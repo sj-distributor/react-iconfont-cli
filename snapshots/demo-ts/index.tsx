@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import React, { ButtonHTMLAttributes, FunctionComponent, MouseEventHandler, ReactElement, SVGAttributes } from 'react';
+import React, { ButtonHTMLAttributes, CSSProperties, FunctionComponent, MouseEventHandler, ReactElement, SVGAttributes } from 'react';
 import IconAlipay from './IconAlipay';
 import IconUser from './IconUser';
 import IconSetup from './IconSetup';
@@ -23,6 +23,13 @@ interface Props extends IconProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   buttonProps?: ButtonProps;
 }
+
+const DEFAULT_BUTTON_STYLE: CSSProperties = {
+  appearance: 'none',
+  background: 'transparent',
+  border: 0,
+  padding: 0,
+};
 
 const splitInteractiveProps = (props: IconProps) => {
   const source = props as Record<string, unknown>;
@@ -87,9 +94,12 @@ const IconFont: FunctionComponent<Props> = ({
     return icon;
   }
 
-  const { type = 'button', ...restButtonProps } = buttonProps;
+  const { style: buttonStyle, type = 'button', ...restButtonProps } = buttonProps;
   const safeButtonProps = restButtonProps as ButtonHTMLAttributes<HTMLButtonElement>;
   delete safeButtonProps.dangerouslySetInnerHTML;
+  const style = buttonStyle
+    ? { ...DEFAULT_BUTTON_STYLE, ...buttonStyle }
+    : DEFAULT_BUTTON_STYLE;
   const accessibilityLabel =
     typeof ariaLabel === 'string' && ariaLabel.trim()
       ? ariaLabel.trim()
@@ -102,6 +112,7 @@ const IconFont: FunctionComponent<Props> = ({
       type={type}
       aria-label={accessibilityLabel}
       onClick={onClick}
+      style={style}
     >
       {icon}
     </button>

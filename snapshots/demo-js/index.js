@@ -8,6 +8,13 @@ export { default as IconAlipay } from './IconAlipay';
 export { default as IconUser } from './IconUser';
 export { default as IconSetup } from './IconSetup';
 
+const DEFAULT_BUTTON_STYLE = {
+  appearance: 'none',
+  background: 'transparent',
+  border: 0,
+  padding: 0,
+};
+
 const splitInteractiveProps = (props) => {
   const buttonA11yProps = {};
   const iconProps = {};
@@ -67,8 +74,11 @@ const IconFont = ({
     return icon;
   }
 
-  const { type = 'button', ...restButtonProps } = buttonProps;
+  const { style: buttonStyle, type = 'button', ...restButtonProps } = buttonProps;
   delete restButtonProps.dangerouslySetInnerHTML;
+  const style = buttonStyle
+    ? { ...DEFAULT_BUTTON_STYLE, ...buttonStyle }
+    : DEFAULT_BUTTON_STYLE;
   const accessibilityLabel =
     typeof ariaLabel === 'string' && ariaLabel.trim()
       ? ariaLabel.trim()
@@ -81,6 +91,7 @@ const IconFont = ({
       type={type}
       aria-label={accessibilityLabel}
       onClick={onClick}
+      style={style}
     >
       {icon}
     </button>
