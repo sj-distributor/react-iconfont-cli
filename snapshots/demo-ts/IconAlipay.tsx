@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import React, { CSSProperties, SVGAttributes, FunctionComponent } from 'react';
+import React, { CSSProperties, SVGAttributes, forwardRef } from 'react';
 import { getIconColor } from './helper';
 
 interface Props extends Omit<SVGAttributes<SVGElement>, 'color'> {
@@ -13,19 +13,19 @@ const DEFAULT_STYLE: CSSProperties = {
   display: 'block',
 };
 
-const IconAlipay: FunctionComponent<Props> = ({
+const IconAlipay = forwardRef<SVGSVGElement, Props>(({
   size = 16,
   color,
   style: _style,
   role = 'img',
   'aria-label': ariaLabel,
   ...rest
-}) => {
+}, ref) => {
   const style = _style ? { ...DEFAULT_STYLE, ..._style } : DEFAULT_STYLE;
   const accessibilityLabel = ariaLabel && ariaLabel.trim() ? ariaLabel.trim() : "alipay";
 
   return (
-    <svg viewBox="0 0 1024 1024" width={size + 'rem'} height={size + 'rem'} style={style} role={role} aria-label={accessibilityLabel} focusable="false" {...rest}>
+    <svg ref={ref} viewBox="0 0 1024 1024" width={size + 'rem'} height={size + 'rem'} style={style} role={role} aria-label={accessibilityLabel} focusable="false" {...rest}>
       <path
         d="M192 692.736c0-69.632 51.2-106.496 88.064-111.104 111.104-18.432 264.192 74.24 264.192 74.24-69.632 88.064-166.912 134.144-241.152 134.144-65.024-4.608-111.104-41.472-111.104-97.28z"
         fill={getIconColor(color, 0, '#5B8BD4', '#5B8BD4')}
@@ -36,6 +36,8 @@ const IconAlipay: FunctionComponent<Props> = ({
       />
     </svg>
   );
-};
+});
+
+IconAlipay.displayName = 'IconAlipay';
 
 export default IconAlipay;

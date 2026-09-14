@@ -7,18 +7,20 @@ const DEFAULT_STYLE = {
   display: 'block',
 };
 
-const #componentName# = ({
+const #componentName# = React.forwardRef(({
   size = #size#,
   color,
   style: _style,
   role = 'img',
   'aria-label': ariaLabel,
   ...rest
-}) => {
+}, ref) => {
   const style = _style ? { ...DEFAULT_STYLE, ..._style } : DEFAULT_STYLE;
   const accessibilityLabel = typeof ariaLabel === 'string' && ariaLabel.trim() ? ariaLabel.trim() : #ariaLabel#;
 
   return (#iconContent#  );
-};
+});
+
+#componentName#.displayName = '#componentName#';
 
 export default #componentName#;

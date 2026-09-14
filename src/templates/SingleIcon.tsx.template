@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import #reactName#{ CSSProperties, SVGAttributes, FunctionComponent } from 'react';
+import #reactName#{ CSSProperties, SVGAttributes, forwardRef } from 'react';
 import { getIconColor } from './helper';
 
 interface Props extends Omit<SVGAttributes<SVGElement>, 'color'> {
@@ -13,18 +13,20 @@ const DEFAULT_STYLE: CSSProperties = {
   display: 'block',
 };
 
-const #componentName#: FunctionComponent<Props> = ({
+const #componentName# = forwardRef<SVGSVGElement, Props>(({
   size = #size#,
   color,
   style: _style,
   role = 'img',
   'aria-label': ariaLabel,
   ...rest
-}) => {
+}, ref) => {
   const style = _style ? { ...DEFAULT_STYLE, ..._style } : DEFAULT_STYLE;
   const accessibilityLabel = ariaLabel && ariaLabel.trim() ? ariaLabel.trim() : #ariaLabel#;
 
   return (#iconContent#  );
-};
+});
+
+#componentName#.displayName = '#componentName#';
 
 export default #componentName#;

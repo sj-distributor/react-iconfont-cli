@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import React, { ButtonHTMLAttributes, CSSProperties, FunctionComponent, MouseEventHandler, ReactElement, SVGAttributes } from 'react';
+import React, { ButtonHTMLAttributes, CSSProperties, MouseEventHandler, ReactElement, Ref, SVGAttributes, forwardRef } from 'react';
 import IconAlipay from './IconAlipay';
 import IconUser from './IconUser';
 import IconSetup from './IconSetup';
@@ -23,6 +23,8 @@ interface Props extends IconProps {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   buttonProps?: ButtonProps;
 }
+
+type IconElement = HTMLButtonElement | SVGSVGElement;
 
 const DEFAULT_BUTTON_STYLE: CSSProperties = {
   appearance: 'none',
@@ -65,17 +67,17 @@ const getAccessibleLabel = (iconName: string): string => {
   return label || iconName;
 };
 
-const IconFont: FunctionComponent<Props> = ({
+const IconFont = forwardRef<IconElement, Props>(({
   name,
   onClick,
   buttonProps = {},
   'aria-label': ariaLabel,
   ...rest
-}) => {
+}, ref) => {
   const interactiveProps = splitInteractiveProps(rest);
   const iconProps = onClick
     ? { ...interactiveProps.iconProps, 'aria-hidden': true }
-    : { ...rest, 'aria-label': ariaLabel };
+    : { ...rest, 'aria-label': ariaLabel, ref: ref as Ref<SVGSVGElement> };
   let icon: ReactElement | null = null;
 
   switch (name) {
@@ -110,6 +112,7 @@ const IconFont: FunctionComponent<Props> = ({
     <button
       {...interactiveProps.buttonA11yProps}
       {...safeButtonProps}
+      ref={ref as Ref<HTMLButtonElement>}
       type={type}
       aria-label={accessibilityLabel}
       onClick={onClick}
@@ -118,6 +121,8 @@ const IconFont: FunctionComponent<Props> = ({
       {icon}
     </button>
   );
-};
+});
+
+IconFont.displayName = 'IconFont';
 
 export default IconFont;

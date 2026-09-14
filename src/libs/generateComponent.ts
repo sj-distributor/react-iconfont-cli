@@ -133,7 +133,7 @@ const generateCase = (
   data: XmlData["svg"]["symbol"][number],
   baseIdent: number,
 ) => {
-  let template = `\n${whitespace(baseIdent)}<svg viewBox="${
+  let template = `\n${whitespace(baseIdent)}<svg ref={ref} viewBox="${
     data.$.viewBox
   }" width={size} height={size} style={style} role={role} aria-label={accessibilityLabel} focusable="false" {...rest}>\n`;
 

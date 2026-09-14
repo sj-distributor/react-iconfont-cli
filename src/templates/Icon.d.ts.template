@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { ButtonHTMLAttributes, FunctionComponent, MouseEventHandler, SVGAttributes } from 'react';
+import { ButtonHTMLAttributes, ForwardRefExoticComponent, MouseEventHandler, RefAttributes, SVGAttributes } from 'react';
 #exports#
 
 type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children' | 'dangerouslySetInnerHTML' | 'onClick'>;
@@ -13,6 +13,6 @@ interface Props extends Omit<SVGAttributes<SVGElement>, 'color' | 'onClick'> {
   buttonProps?: ButtonProps;
 }
 
-declare const IconFont: FunctionComponent<Props>;
+declare const IconFont: ForwardRefExoticComponent<Props & RefAttributes<HTMLButtonElement | SVGSVGElement>>;
 
 export default IconFont;

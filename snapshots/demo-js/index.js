@@ -45,17 +45,17 @@ const getAccessibleLabel = (iconName) => {
   return label || iconName;
 };
 
-const IconFont = ({
+const IconFont = React.forwardRef(({
   name,
   onClick,
   buttonProps = {},
   'aria-label': ariaLabel,
   ...rest
-}) => {
+}, ref) => {
   const interactiveProps = splitInteractiveProps(rest);
   const iconProps = onClick
     ? { ...interactiveProps.iconProps, 'aria-hidden': true }
-    : { ...rest, 'aria-label': ariaLabel };
+    : { ...rest, 'aria-label': ariaLabel, ref };
   let icon = null;
 
   switch (name) {
@@ -89,6 +89,7 @@ const IconFont = ({
     <button
       {...interactiveProps.buttonA11yProps}
       {...restButtonProps}
+      ref={ref}
       type={type}
       aria-label={accessibilityLabel}
       onClick={onClick}
@@ -97,6 +98,8 @@ const IconFont = ({
       {icon}
     </button>
   );
-};
+});
+
+IconFont.displayName = 'IconFont';
 
 export default IconFont;
